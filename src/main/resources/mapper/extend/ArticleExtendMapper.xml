@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.briup.apps.cms.dao.extend.ArticleExtendMapper">
+	<resultMap id="ArticleExtendResultMap"
+		type="com.briup.apps.cms.bean.extend.ArticleExtend"
+		extends="com.briup.apps.cms.dao.ArticleMapper.BaseResultMap">
+	
+		<association property="category" column="category_id"
+			select="com.briup.apps.cms.dao.CategoryMapper.selectByPrimaryKey">
+		</association>
+		<association property="user" column="author_id" select="com.briup.apps.cms.dao.UserMapper.selectByPrimaryKey"></association>
+		<collection property="comments" column="id"
+			select="com.briup.apps.cms.dao.extend.CommentExtendMapper.slelctByArticleId"></collection>
+	</resultMap>
+
+	<resultMap
+		type="com.briup.apps.cms.bean.extend.ArticlePreview"
+		id="articlePreview">
+		<result column="TITLE" property="title" />
+		<result column="CONTENT" property="content" />
+		<result column="READ_TIMES" property="readTimes" />
+		<result column="THUMP_UP" property="thumpUp" />
+	</resultMap>
+	<select id="selectAll" resultMap="ArticleExtendResultMap">
+		SELECT *
+		FROM CMS_ARTICLE 
+	</select>
+
+	<select id="selectById" parameterType="long"
+		resultMap="ArticleExtendResultMap">
+		SELECT *
+		FROM CMS_ARTICLE
+		WHERE ID = #{id,jdbcType=BIGINT}
+	</select>
+	<insert id="insert"
+		parameterType="com.briup.apps.cms.bean.Article">
+		INSERT INTO CMS_ARTICLE
+		VALUES(#{id},#{title},#{content},#{source},#{publishTime},#{readTimes},#{status},#{thumpUp},#{thumpDown},#{authorId},#{categoryId})
+	</insert>
+	<select id="selectAllPreview" resultMap="articlePreview">
+		SELECT TITLE,CONTENT,READ_TIMES ,THUMP_UP
+		FROM CMS_ARTICLE
+
+	</select>
+
+</mapper>

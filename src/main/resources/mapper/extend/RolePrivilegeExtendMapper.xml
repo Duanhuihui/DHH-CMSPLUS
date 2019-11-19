@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.briup.apps.cms.dao.extend.RolePrivilegeExtendMapper">
+	  <resultMap 
+	  id="RolePrivilegeExtendResultMap" 
+	  type="com.briup.apps.cms.bean.extend.RolePrivilegeExtend" 
+	  extends="com.briup.apps.cms.dao.RolePrivilegeMapper.BaseResultMap">
+	  <association property="privilege" column="privilege_id" select="com.briup.apps.cms.dao.PrivilegeMapper.selectByPrimaryKey"></association>
+  </resultMap>
+  
+  <select id="selectByPrivilegeID" resultMap="RolePrivilegeExtendResultMap">
+   SELECT ROLE_PRIVILEGE.ROLE_ID,ROLE_PRIVILEGE.privilege_id,PRIVILEGE.*
+  FROM BASE_ROLE_PRIVILEGE ROLE_PRIVILEGE,BASE_PRIVILEGE PRIVILEGE
+  WHERE ROLE_PRIVILEGE.PRIVILEGE_ID = PRIVILEGE.ID
+  </select>
+  
+  
+</mapper>

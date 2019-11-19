@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.briup.apps.cms.dao.extend.PrivilegeExtendMapper">
+  <resultMap 
+	  id="PrivilegeResultMap" 
+	  type="com.briup.apps.cms.bean.Privilege">
+  </resultMap>
+  <select id="selectAll" resultMap="com.briup.apps.cms.dao.PrivilegeMapper.BaseResultMap">
+  SELECT * 
+  FROM BASE_Privilege
+  </select>
+  <select id="selectByParentId" parameterType="long" resultMap="PrivilegeResultMap">
+  SELECT * 
+  FROM BASE_Privilege
+  where parent_id = #{id}
+  </select>
+  <resultMap type="com.briup.apps.cms.bean.extend.PrivilegeExtend" id="PrivilegeTree" extends="com.briup.apps.cms.dao.PrivilegeMapper.BaseResultMap">
+  	<collection property="privilege" column="id" select="selectChildern"></collection>
+  </resultMap>
+  <select id="selectCascade" resultMap="PrivilegeTree">
+  	SELECT * FROM BASE_PRIVILEGE
+  </select>
+  <select id="selectChildern" resultMap="PrivilegeTree">
+  	SELECT * FROM BASE_PRIVILEGE
+  	WHERE PARENT_ID = #{id}
+  </select>
+  
+</mapper>

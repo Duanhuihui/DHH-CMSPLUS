@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.briup.apps.cms.dao.extend.RoleExtendMapper">
+	<resultMap 
+	  id="RoleResultMap" 
+	  type="com.briup.apps.cms.bean.Role">
+  </resultMap>
+  	
+  <resultMap 
+	  id="RoleExtendResultMap" 
+	  type="com.briup.apps.cms.bean.extend.RoleExtend" 
+	  extends="com.briup.apps.cms.dao.RoleMapper.BaseResultMap">
+	  <association property="rolePrivilegeExtend" column="id" select="com.briup.apps.cms.dao.extend.RolePrivilegeExtendMapper.selectByPrivilegeID"></association>
+  </resultMap>
+  
+  <select id="selectAll" resultMap="RoleResultMap">
+  SELECT * 
+  FROM BASE_ROLE 
+  </select>
+  
+  <select id="selectCascadePrivilege" resultMap="RoleExtendResultMap">
+  SELECT
+	*
+FROM
+	BASE_ROLE ROLE,
+	BASE_ROLE_PRIVILEGE ROLE_PRIVILEGE,
+	BASE_PRIVILEGE PRIVILEGE 
+WHERE
+	ROLE.ID = ROLE_PRIVILEGE.PRIVILEGE_ID 
+	AND ROLE_PRIVILEGE.PRIVILEGE_ID = PRIVILEGE.ID;
+  </select>
+  <resultMap type="com.briup.apps.cms.bean.extend.RoleInfo" id="RoleInfo">
+  	<result property="id" column="id"/>
+  	<result property="name" column="name"/>
+  	<collection property="privileges" column="id" select="selectPrivileges"></collection>
+  </resultMap>
+  <select id="cascadePrivilege" resultMap="RoleInfo">
+  	SELECT * FROM BASE_ROLE
+  </select>
+  <select id="selectPrivileges" resultType="com.briup.apps.cms.bean.Privilege">
+  	SELECT P.*
+  	FROM BASE_ROLE_PRIVILEGE R JOIN BASE_PRIVILEGE P ON R.PRIVILEGE_ID = P.ID
+  	WHERE R.ROLE_ID = #{id}
+  </select>
+  
+</mapper>
